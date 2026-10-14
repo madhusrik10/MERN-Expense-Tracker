@@ -14,37 +14,43 @@ const app = express();
 
 const port = process.env.PORT;
 
-connectDB();
+// Wait for DB connection before starting the server. This prevents buffered DB operations
+// from timing out while mongoose is still connecting.
+(async () => {
+  try {
+    await connectDB();
 
-// const allowedOrigins = [
-//   "https://main.d1sj7cd70hlter.amplifyapp.com",
-//   "https://expense-tracker-app-three-beryl.vercel.app",
-//   // add more origins as needed
-// ];
+    // Middleware
+    app.use(express.json());
+    app.use(
+      cors({
+        origin: true,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+      })
+    );
+    app.use(helmet());
+    app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+    app.use(morgan("dev"));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
 
-// Middleware
-app.use(express.json());
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
-);
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(morgan("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+    // Router
+    app.use("/api/v1", transactionRoutes);
+    app.use("/api/auth", userRoutes);
 
-// Router
-app.use("/api/v1", transactionRoutes);
-app.use("/api/auth", userRoutes);
+    app.get("/", (req, res) => {
+      res.send("Hello World!");
+    });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.listen(port, () => {
-  console.log(`Server is listening on http://localhost:${port}`);
-});
+    app.listen(port, () => {
+      console.log(`Server is listening on http://localhost:${port}`);
+    });
+  } catch (err) {
+    console.error(
+      "Failed to start server - MongoDB connection error. Check MONGO_URL and database network access.",
+      err
+    );
+    process.exit(1);
+  }
+})();
