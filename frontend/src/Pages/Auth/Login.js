@@ -1,14 +1,15 @@
 // LoginPage.js
 import { useCallback, useEffect, useState } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import "./auth.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import pennybloomLogo from "../../assets/pennybloom-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { loginAPI } from "../../utils/ApiRequest";
+import { getApiErrorMessage, loginAPI } from "../../utils/ApiRequest";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("user")) {
+    if (localStorage.getItem("user") && localStorage.getItem("token")) {
       navigate("/");
     }
   }, [navigate]);
@@ -66,7 +67,11 @@ const Login = () => {
       });
 
       if (data.success === true) {
+        if (!data.token) {
+          throw new Error("Authentication is temporarily unavailable. Please try again later.");
+        }
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("token", data.token);
         toast.success(data.message, toastOptions);
         // Delay navigation to show success message
         setTimeout(() => {
@@ -78,8 +83,7 @@ const Login = () => {
       }
     } catch (error) {
       // Handle network errors and API errors
-      const errorMessage = error.response?.data?.message || error.message || "Login failed. Please try again.";
-      toast.error(errorMessage, toastOptions);
+      toast.error(getApiErrorMessage(error, "Login failed. Please try again."), toastOptions);
       setLoading(false);
       // Do NOT navigate on error - stay on login page
     }
@@ -95,7 +99,7 @@ const Login = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", overflow: "hidden" }}>
+    <div className="auth-page auth-page--split" style={{ position: "relative", overflow: "hidden" }}>
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -162,22 +166,31 @@ const Login = () => {
           bottom: 0,
         }}
       />
-      <Container
-        className="mt-5"
-        style={{ position: "relative", zIndex: "2 !important" }}
-      >
-        <Row>
-          <Col md={{ span: 6, offset: 3 }}>
-            <h1 className="text-center mt-5">
-              <AccountBalanceWalletIcon
-                sx={{ fontSize: 40, color: "white" }}
-                className="text-center"
+      <Container className="auth-shell">
+        <Row className="auth-card auth-card--split g-0">
+          <Col lg={5} className="auth-visual d-flex">
+            <div className="auth-visual__content">
+              <div className="brand-copy">
+                <h1>PennyBloom</h1>
+                <p>Grow better money habits.</p>
+              </div>
+              <img
+                className="auth-illustration"
+                src={pennybloomLogo}
+                alt="A savings jar with growing leaves and coins"
               />
-            </h1>
-            <h2 className="text-white text-center ">Login</h2>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formBasicEmail" className="mt-3">
-                <Form.Label className="text-white">Email address</Form.Label>
+            </div>
+          </Col>
+
+          <Col lg={7} className="auth-panel">
+            <div className="auth-panel__header">
+              <h2>Welcome back</h2>
+              <p>Continue growing better money habits.</p>
+            </div>
+
+            <Form onSubmit={handleSubmit} className="auth-form">
+              <Form.Group controlId="formBasicEmail" className="form-group-auth">
+                <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="Enter email"
@@ -187,8 +200,8 @@ const Login = () => {
                 />
               </Form.Group>
 
-              <Form.Group controlId="formBasicPassword" className="mt-3">
-                <Form.Label className="text-white">Password</Form.Label>
+              <Form.Group controlId="formBasicPassword" className="form-group-auth">
+                <Form.Label>Password</Form.Label>
                 <Form.Control
                   type="password"
                   name="password"
@@ -197,35 +210,24 @@ const Login = () => {
                   value={values.password}
                 />
               </Form.Group>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                }}
-                className="mt-4"
-              >
-                <Link to="/forgotPassword" className="text-white lnk">
-                  Forgot Password?
+
+              <div className="auth-secondary-row">
+                <label className="auth-check-row">
+                  <input type="checkbox" />
+                  <span>Remember me</span>
+                </label>
+                <Link to="/forgotPassword" className="lnk">
+                  Forgot password?
                 </Link>
-
-                <Button
-                  type="submit"
-                  className=" text-center mt-3 btnStyle"
-                  disabled={loading}
-                >
-                  {loading ? "Signing in..." : "Login"}
-                </Button>
-
-                <p className="mt-3" style={{ color: "#9d9494" }}>
-                  Don't Have an Account?{" "}
-                  <Link to="/register" className="text-white lnk">
-                    Register
-                  </Link>
-                </p>
               </div>
+
+              <Button type="submit" className="btnStyle auth-submit" disabled={loading}>
+                {loading ? "Signing in..." : "Log in"}
+              </Button>
+
+              <p className="auth-bottom-text">
+                Don&apos;t have an account? <Link to="/register" className="lnk">Sign up</Link>
+              </p>
             </Form>
           </Col>
         </Row>

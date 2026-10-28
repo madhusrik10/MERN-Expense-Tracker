@@ -106,26 +106,35 @@ const TableData = (props) => {
           <tbody className="text-white">
             {props.data.map((item, index) => (
               <tr key={index}>
-                <td>{moment(item.date).format("YYYY-MM-DD")}</td>
+                <td>{moment(item.date).format("MMM D, YYYY")}</td>
                 <td>{item.title}</td>
-                <td>{item.amount}</td>
-                <td>{item.transactionType}</td>
-                <td>{item.category}</td>
+                <td className={`transaction-amount ${item.transactionType === "credit" ? "income" : "expense"}`}>
+                  {item.transactionType === "credit" ? "+" : "−"}₹{Number(item.amount || 0).toLocaleString("en-IN")}
+                </td>
+                <td>
+                  <span className={`transaction-type ${item.transactionType === "credit" ? "income" : "expense"}`}>
+                    {item.transactionType === "credit" ? "Income" : "Expense"}
+                  </span>
+                </td>
+                <td><span className="category-chip">{item.category}</span></td>
                 <td>
                   <div className="icons-handle">
-                    <EditNoteIcon
-                      sx={{ cursor: "pointer" }}
-                      key={item._id}
-                      id={item._id}
+                    <button
+                      type="button"
+                      className="action-icon"
+                      aria-label={`Edit ${item.title}`}
                       onClick={() => handleEditClick(item._id)}
-                    />
-
-                    <DeleteForeverIcon
-                      sx={{ color: "red", cursor: "pointer" }}
-                      key={index}
-                      id={item._id}
+                    >
+                      <EditNoteIcon />
+                    </button>
+                    <button
+                      type="button"
+                      className="action-icon delete-action"
+                      aria-label={`Delete ${item.title}`}
                       onClick={() => handleDeleteClick(item._id)}
-                    />
+                    >
+                      <DeleteForeverIcon />
+                    </button>
 
                     {editingTransaction ? (
                       <>

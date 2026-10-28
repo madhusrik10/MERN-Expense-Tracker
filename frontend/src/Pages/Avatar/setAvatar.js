@@ -57,7 +57,6 @@ const SetAvatar = () => {
 
   const [selectedAvatar, setSelectedAvatar] = useState(undefined);
   const [loading, setLoading] = useState(false);
-  const [selectedSprite, setSelectedSprite] = React.useState(sprites[0]);
 
   useEffect(() => {
     if (!localStorage.getItem("user")) {
@@ -83,25 +82,18 @@ const SetAvatar = () => {
   ]);
 
   const handleSpriteChange = (e) => {
-    setSelectedSprite(() => {
-      if (e.target.value.length > 0) {
-        setLoading(true);
-        const imgData = [];
-        for (let i = 0; i < 4; i++) {
-          imgData.push(
-            `https://api.dicebear.com/7.x/${
-              e.target.value
-            }/svg?seed=${randomName()}`
-          );
-        }
-
-        setImgURL(imgData);
-        // console.log(imgData);
-        setLoading(false);
+    if (e.target.value.length > 0) {
+      setLoading(true);
+      const imgData = [];
+      for (let i = 0; i < 4; i++) {
+        imgData.push(
+          `https://api.dicebear.com/7.x/${e.target.value}/svg?seed=${randomName()}`
+        );
       }
 
-      return e.target.value;
-    });
+      setImgURL(imgData);
+      setLoading(false);
+    }
   };
 
   const setProfilePicture = async () => {
@@ -148,7 +140,7 @@ const SetAvatar = () => {
 
   return (
     <>
-      <div style={{ position: "relative", overflow: "hidden" }}>
+      <div className="avatar-page" style={{ position: "relative", overflow: "hidden" }}>
         <Particles
           id="tsparticles"
           init={particlesInit}
@@ -260,7 +252,7 @@ const SetAvatar = () => {
                         <div key={index} className="col-lg-3 col-md-6 col-6">
                           <img
                             src={image}
-                            alt=""
+                            alt={`Avatar option ${index + 1}`}
                             className={`avatar ${
                               selectedAvatar === index ? "selected" : ""
                             } img-circle imgAvatar mt-5`}

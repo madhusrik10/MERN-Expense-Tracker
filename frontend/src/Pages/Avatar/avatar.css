@@ -1,24 +1,88 @@
-.containerBox{
-    height: 100%;
+.avatar-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 14% 10%, rgba(217, 230, 208, 0.75), transparent 32%),
+    radial-gradient(ellipse at 88% 87%, rgba(241, 220, 218, 0.62), transparent 31%),
+    #f8f7f2;
 }
 
-.avatarBox{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    flex-direction: column;
-
+.avatar-page #tsparticles {
+  display: none !important;
 }
 
-.avatar:hover{
-    border: 0.4rem solid blueviolet;
-
-    transition: 0.5s ease-in-out;
-    cursor: pointer;
+.avatar-page .containerBox {
+  min-height: 100vh;
+  padding: 34px 16px;
 }
 
-.selected{
-    border: 0.4rem solid blueviolet !important; 
+.avatar-page .avatarBox {
+  width: min(100%, 780px);
+  min-height: 560px;
+  border: 1px solid rgba(42, 65, 51, 0.09);
+  border-radius: 23px;
+  margin: 0 auto;
+  padding: 30px clamp(18px, 5vw, 46px);
+  background: rgba(255, 254, 250, 0.96);
+  box-shadow: 0 22px 65px rgba(40, 54, 44, 0.1);
 }
 
+.avatar-page h1.text-white {
+  margin-top: 0 !important;
+  color: #263b32 !important;
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+}
+
+.avatar-page .avatar {
+  aspect-ratio: 1;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background: #f4f3ee;
+  object-fit: contain;
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.avatar-page .avatar:hover,
+.avatar-page .avatar.selected {
+  border-color: #7e9b7b !important;
+  box-shadow: 0 8px 22px rgba(64, 100, 71, 0.16);
+  transform: translateY(-3px);
+  cursor: pointer;
+}
+
+.avatar-page .form-select {
+  max-width: 360px;
+  min-height: 45px;
+  border: 1px solid #e1e6de;
+  border-radius: 10px;
+  background-color: #fff;
+  color: #34483d;
+}
+
+.avatar-page .btn {
+  min-height: 45px;
+  border: 1px solid #244a3b;
+  border-radius: 10px;
+  padding: 0 19px;
+  background: #244a3b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.avatar-page .btn:hover {
+  border-color: #183b30;
+  background: #183b30;
+}
+
+@media (max-width: 575px) {
+  .avatar-page .containerBox {
+    padding: 18px 12px;
+  }
+
+  .avatar-page .avatarBox {
+    min-height: 0;
+    border-radius: 18px;
+    padding: 25px 14px;
+  }
+}

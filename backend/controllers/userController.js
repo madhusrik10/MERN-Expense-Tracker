@@ -1,11 +1,10 @@
 import User from "../models/UserSchema.js";
 import bcrypt from "bcrypt";
+import { signAuthToken } from "../middleware/authenticateToken.js";
 
 export const registerControllers = async (req, res, next) => {
     try{
         const {name, email, password} = req.body;
-
-        console.log(name, email, password);
 
         if(!name || !email || !password){
             return res.status(400).json({
@@ -81,12 +80,23 @@ export const loginControllers = async (req, res, next) => {
             }); 
         }
 
-        delete user.password;
+        const token = signAuthToken(user._id.toString());
+        if (!token) {
+            return res.status(503).json({
+                success: false,
+                code: "AUTH_NOT_CONFIGURED",
+                message: "Authentication is temporarily unavailable.",
+            });
+        }
+
+        const safeUser = user.toObject();
+        delete safeUser.password;
 
         return res.status(200).json({
             success: true,
             message: `Welcome back, ${user.name}`,
-            user,
+            user: safeUser,
+            token,
         });
 
     }

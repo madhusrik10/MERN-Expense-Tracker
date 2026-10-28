@@ -1,5 +1,45 @@
-*{
-    padding: 0px;
-    margin: 0px;
-    /* background-color: black !important;; */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #f8f7f2;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: #f8f7f2;
+  color: #263b32;
+  font-family: "Aptos", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.brand-name {
+  font-family: "Aptos Display", "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(137, 169, 132, 0.55);
+  outline-offset: 2px;
 }

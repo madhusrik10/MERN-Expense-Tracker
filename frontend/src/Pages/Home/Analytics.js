@@ -72,16 +72,16 @@ const Analytics = ({ transactions }) => {
   ];
 
   const colors = {
-    "Groceries": '#FF6384',
-    "Rent": '#36A2EB',
-    "Salary": '#FFCE56',
-    "Tip": '#4BC0C0',
-    "Food": '#9966FF',
-    "Medical": '#FF9F40',
-    "Utilities": '#8AC926',
-    "Entertainment": '#6A4C93',
-    "Transportation": '#1982C4',
-    "Other": '#F45B69',
+    "Groceries": '#d79a9a',
+    "Rent": '#9ab8c7',
+    "Salary": '#c5d7b9',
+    "Tip": '#a9c9bf',
+    "Food": '#b7a9ce',
+    "Medical": '#e8b995',
+    "Utilities": '#9ab891',
+    "Entertainment": '#c4a8bd',
+    "Transportation": '#8ba8bd',
+    "Other": '#d5aa9b',
   };
   
   

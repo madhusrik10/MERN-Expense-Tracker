@@ -3,12 +3,12 @@ import { useCallback, useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import pennybloomLogo from "../../assets/pennybloom-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import { forgotPasswordAPI } from "../../utils/ApiRequest";
+import { forgotPasswordAPI, getApiErrorMessage } from "../../utils/ApiRequest";
 import "./auth.css";
 
 const ForgotPassword = () => {
@@ -71,11 +71,10 @@ const ForgotPassword = () => {
         setLoading(false);
       }
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to process request. Please try again.";
-      toast.error(errorMessage, toastOptions);
+      toast.error(
+        getApiErrorMessage(error, "Failed to process request. Please try again."),
+        toastOptions
+      );
       setLoading(false);
     }
   };
@@ -89,7 +88,7 @@ const ForgotPassword = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", overflow: "hidden" }}>
+    <div className="auth-page auth-page--split" style={{ position: "relative", overflow: "hidden" }}>
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -156,26 +155,34 @@ const ForgotPassword = () => {
           bottom: 0,
         }}
       />
-      <Container
-        className="mt-5"
-        style={{ position: "relative", zIndex: "2 !important" }}
-      >
-        <Row>
-          <Col md={{ span: 6, offset: 3 }}>
-            <h1 className="text-center mt-5">
-              <AccountBalanceWalletIcon
-                sx={{ fontSize: 40, color: "white" }}
-                className="text-center"
+      <Container className="auth-shell">
+        <Row className="auth-card auth-card--split g-0">
+          <Col lg={5} className="auth-visual d-flex">
+            <div className="auth-visual__content">
+              <div className="brand-copy">
+                <h1>PennyBloom</h1>
+                <p>Grow better money habits.</p>
+              </div>
+              <img
+                className="auth-illustration"
+                src={pennybloomLogo}
+                alt="A savings jar with growing leaves and coins"
               />
-            </h1>
-            <h2 className="text-white text-center">Forgot Password</h2>
-            <p className="text-white text-center mt-3">
-              Enter your email address and we'll send you a link to reset your
-              password.
-            </p>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formBasicEmail" className="mt-3">
-                <Form.Label className="text-white">Email address</Form.Label>
+            </div>
+          </Col>
+
+          <Col lg={7} className="auth-panel">
+            <div className="auth-panel__header">
+              <h2>Reset your password</h2>
+              <p>
+                Enter your email address and we&apos;ll send you a secure link to reset
+                your password.
+              </p>
+            </div>
+
+            <Form onSubmit={handleSubmit} className="auth-form">
+              <Form.Group controlId="formBasicEmail" className="form-group-auth">
+                <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
                   placeholder="Enter your email"
@@ -184,35 +191,17 @@ const ForgotPassword = () => {
                   value={values.email}
                 />
               </Form.Group>
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                }}
-                className="mt-4"
-              >
-                <Button
-                  type="submit"
-                  className="text-center mt-3 btnStyle"
-                  disabled={loading}
-                >
-                  {loading ? "Sending..." : "Send Reset Link"}
-                </Button>
 
-                <p className="mt-3" style={{ color: "#9d9494" }}>
-                  Remember your password?{" "}
-                  <Link to="/login" className="text-white lnk">
-                    Login
-                  </Link>
+              <Button type="submit" className="btnStyle auth-submit" disabled={loading}>
+                {loading ? "Sending..." : "Send Reset Link"}
+              </Button>
+
+              <div className="auth-links">
+                <p>
+                  Remember your password? <Link to="/login" className="lnk">Login</Link>
                 </p>
-                <p className="mt-2" style={{ color: "#9d9494" }}>
-                  Don't have an account?{" "}
-                  <Link to="/register" className="text-white lnk">
-                    Register
-                  </Link>
+                <p>
+                  Don&apos;t have an account? <Link to="/register" className="lnk">Register</Link>
                 </p>
               </div>
             </Form>
@@ -225,4 +214,3 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
-

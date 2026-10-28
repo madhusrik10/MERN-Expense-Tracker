@@ -4,11 +4,11 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import "./auth.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import pennybloomLogo from "../../assets/pennybloom-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { registerAPI } from "../../utils/ApiRequest";
+import { getApiErrorMessage, registerAPI } from "../../utils/ApiRequest";
 import axios from "axios";
 
 const Register = () => {
@@ -98,16 +98,14 @@ const Register = () => {
       }
     } catch (error) {
       // Handle network errors and API errors
-      const errorMessage = error.response?.data?.message || error.message || "Registration failed. Please try again.";
-      toast.error(errorMessage, toastOptions);
+      toast.error(getApiErrorMessage(error, "Registration failed. Please try again."), toastOptions);
       setLoading(false);
       // Do NOT navigate on error - stay on registration page
     }
   };
 
   return (
-    <>
-    <div style={{ position: 'relative', overflow: 'hidden' }}>
+    <div className="auth-page auth-page--split" style={{ position: 'relative', overflow: 'hidden' }}>
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -175,49 +173,58 @@ const Register = () => {
         }}
       />
 
-      <Container className="mt-5" style={{position: 'relative', zIndex: "2 !important", color:"white !important"}}>
-      <Row>
-        <h1 className="text-center">
-          <AccountBalanceWalletIcon sx={{ fontSize: 40, color: "white"}}  className="text-center" />
-        </h1>
-        <h1 className="text-center text-white">Welcome to Expense Management System</h1>
-        <Col md={{ span: 6, offset: 3 }}>
-          <h2 className="text-white text-center mt-5" >Registration</h2>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formBasicName" className="mt-3" >
-              <Form.Label className="text-white">Name</Form.Label>
-              <Form.Control type="text"  name="name" placeholder="Full name" value={values.name} onChange={handleChange} />
-            </Form.Group>
-            <Form.Group controlId="formBasicEmail" className="mt-3">
-              <Form.Label className="text-white">Email address</Form.Label>
-              <Form.Control type="email"  name="email" placeholder="Enter email" value={values.email} onChange={handleChange}/>
-            </Form.Group>
-
-            <Form.Group controlId="formBasicPassword" className="mt-3">
-              <Form.Label className="text-white">Password</Form.Label>
-              <Form.Control type="password"  name="password" placeholder="Password" value={values.password} onChange={handleChange} />
-            </Form.Group>
-            <div style={{width: "100%", display: "flex" , alignItems:"center", justifyContent:"center", flexDirection: "column"}} className="mt-4">
-              <Link to="/forgotPassword" className="text-white lnk" >Forgot Password?</Link>
-
-              <Button
-                  type="submit"
-                  className=" text-center mt-3 btnStyle"
-                  disabled={loading}
-                >
-                  {loading ? "Registering..." : "Signup"}
-                </Button>
-
-              <p className="mt-3" style={{color: "#9d9494"}}>Already have an account? <Link to="/login" className="text-white lnk" >Login</Link></p>
+      <Container className="auth-shell">
+        <Row className="auth-card auth-card--split g-0">
+          <Col lg={5} className="auth-visual d-flex">
+            <div className="auth-visual__content">
+              <div className="brand-copy">
+                <h1>PennyBloom</h1>
+                <p>Grow better money habits.</p>
+              </div>
+              <img
+                className="auth-illustration"
+                src={pennybloomLogo}
+                alt="A savings jar with growing leaves and coins"
+              />
             </div>
-          </Form>
-        </Col>
-      </Row>
-    <ToastContainer />
-    </Container>
+          </Col>
+
+          <Col lg={7} className="auth-panel">
+            <div className="auth-panel__header">
+              <h2>Create your account</h2>
+              <p>Join us and start your financial journey.</p>
+            </div>
+
+            <Form onSubmit={handleSubmit} className="auth-form">
+              <Form.Group controlId="formBasicName" className="form-group-auth">
+                <Form.Label>Full name</Form.Label>
+                <Form.Control type="text" name="name" placeholder="Full name" value={values.name} onChange={handleChange} />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicEmail" className="form-group-auth">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control type="email" name="email" placeholder="Enter email" value={values.email} onChange={handleChange} />
+              </Form.Group>
+
+              <Form.Group controlId="formBasicPassword" className="form-group-auth">
+                <Form.Label>Password</Form.Label>
+                <Form.Control type="password" name="password" placeholder="Password" value={values.password} onChange={handleChange} />
+              </Form.Group>
+
+              <Button type="submit" className="btnStyle auth-submit" disabled={loading}>
+                {loading ? "Registering..." : "Create account"}
+              </Button>
+
+              <p className="auth-bottom-text">
+                Already have an account? <Link to="/login" className="lnk">Login</Link>
+              </p>
+            </Form>
+          </Col>
+        </Row>
+        <ToastContainer />
+      </Container>
     </div>
-    </>
-  )
+  );
 }
 
 export default Register

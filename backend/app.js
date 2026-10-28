@@ -7,8 +7,10 @@ import helmet from "helmet";
 import morgan from "morgan";
 import transactionRoutes from "./Routers/Transactions.js";
 import userRoutes from "./Routers/userRouter.js";
+import aiInsightsRoutes from "./Routers/aiInsights.js";
 import path from "path";
 
+dotenv.config({ path: "./config/secrets.env" });
 dotenv.config({ path: "./config/config.env" });
 const app = express();
 
@@ -37,6 +39,7 @@ const port = process.env.PORT;
 
     // Router
     app.use("/api/v1", transactionRoutes);
+    app.use("/api/v1/ai", aiInsightsRoutes);
     app.use("/api/auth", userRoutes);
 
     app.get("/", (req, res) => {
