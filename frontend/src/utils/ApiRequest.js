@@ -1,8 +1,8 @@
-const configuredHost = process.env.REACT_APP_API_URL;
+const configuredHost = process.env.REACT_APP_API_URL?.trim();
 const host = (
   configuredHost ||
   (process.env.NODE_ENV === "production"
-    ? "https://expense-tracker-app-knl1.onrender.com"
+    ? ""
     : "http://localhost:5000")
 ).replace(/\/+$/, "");
 

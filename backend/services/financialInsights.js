@@ -3,8 +3,14 @@ import axios from "axios";
 const DAY_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_PROVIDER_URL = "https://integrate.api.nvidia.com/v1/chat/completions";
 const OPENROUTER_PROVIDER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const PROVIDER_TIMEOUT_MS = 25000;
-const MAX_PROVIDER_RETRIES = 2;
+const DEFAULT_TIMEOUT_MS = process.env.VERCEL ? 12000 : 25000;
+const PROVIDER_TIMEOUT_MS = process.env.AI_PROVIDER_TIMEOUT_MS
+  ? Number(process.env.AI_PROVIDER_TIMEOUT_MS)
+  : DEFAULT_TIMEOUT_MS;
+const DEFAULT_RETRIES = process.env.VERCEL ? 1 : 2;
+const MAX_PROVIDER_RETRIES = process.env.AI_PROVIDER_MAX_RETRIES !== undefined
+  ? Number(process.env.AI_PROVIDER_MAX_RETRIES)
+  : DEFAULT_RETRIES;
 const PROVIDER_RETRY_BASE_DELAY_MS = 500;
 const PROVIDER_RETRY_MAX_DELAY_MS = 2000;
 const TRANSIENT_PROVIDER_STATUSES = new Set([502, 503, 504]);
