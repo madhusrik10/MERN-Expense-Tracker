@@ -59,7 +59,7 @@ const SetAvatar = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem("user")) {
+    if (!localStorage.getItem("user") || !localStorage.getItem("token")) {
       navigate("/login");
     }
   }, [navigate]);

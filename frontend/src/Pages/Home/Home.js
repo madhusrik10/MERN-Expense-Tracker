@@ -59,7 +59,7 @@ const Home = () => {
 
   useEffect(() => {
     const avatarFunc = async () => {
-      if (localStorage.getItem("user")) {
+      if (localStorage.getItem("user") && localStorage.getItem("token")) {
         const user = JSON.parse(localStorage.getItem("user"));
         console.log(user);
 

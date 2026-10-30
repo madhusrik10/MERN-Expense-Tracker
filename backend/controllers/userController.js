@@ -34,10 +34,23 @@ export const registerControllers = async (req, res, next) => {
             password: hashedPassword, 
         });
 
+        const token = signAuthToken(newUser._id.toString());
+        if (!token) {
+            return res.status(503).json({
+                success: false,
+                code: "AUTH_NOT_CONFIGURED",
+                message: "Authentication is temporarily unavailable.",
+            });
+        }
+
+        const safeUser = newUser.toObject();
+        delete safeUser.password;
+
         return res.status(200).json({
             success: true,
             message: "User Created Successfully",
-            user: newUser
+            user: safeUser,
+            token,
         });
     }
     catch(err){

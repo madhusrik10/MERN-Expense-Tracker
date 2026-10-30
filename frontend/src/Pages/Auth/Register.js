@@ -86,6 +86,9 @@ const Register = () => {
       if(data.success === true){
         delete data.user.password;
         localStorage.setItem("user", JSON.stringify(data.user));
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
         toast.success(data.message, toastOptions);
         // Delay navigation to show success message
         setTimeout(() => {
